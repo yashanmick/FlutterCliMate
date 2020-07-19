@@ -1,7 +1,8 @@
+import 'package:clima/services/networking.dart';
 import 'package:flutter/material.dart';
 import 'package:clima/services/location.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
+const apiKey = '1e8faaa21f1ec33da0d48afcc1e25613';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -9,64 +10,40 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+
+  double latitude;
+  double longitude;
+
   @override
   void initState() {
     //implement initState
     super.initState();
-    getLocation();
-    print('this line of code is triggered');
-    // getData();
   }
 
-  void getLocation() async {
+  void getLocationData() async {
     Location location = Location();
     await location.getCurrentLocation();
-    print(location.latitude);
-    print(location.longitude);
-  }
+    latitude = location.latitude;
+    longitude = location.longitude;
 
-  void getData() async {
-    http.Response res = await http.get(
-        'https://samples.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=439d4b804bc8187953eb36d2a8c26a02');
-    //print(res.statusCode);
-    if (res.statusCode == 200) {
-      String data = res.body;
-      //print(data);
+    NetworkHelper networkHelper = NetworkHelper(
+        'https://samples.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey');
 
-      // var longitude = jsonDecode(data)['coord']['lon'];
-      // print(longitude);
-
-      // var weatherDescription = jsonDecode(data)['weather'][0]['description'];
-      // print(weatherDescription);
-
-      var decodedData = jsonDecode(data);
-
-      double tempreture = decodedData['main']['temp'];
-      print(tempreture);
-
-      int condition = decodedData['weather'][0]['id'];
-      print(condition);
-
-      String city = decodedData['name'];
-      print(city);
-    } else {
-      print(res.statusCode);
-    }
+    var weatherData = await networkHelper.getData();
   }
 
   @override
   Widget build(BuildContext context) {
-    getData();
     return Scaffold(
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            //Get the current location
-            getLocation();
-          },
-          child: Text('Get Location'),
-        ),
-      ),
-    );
+        // body: Center(
+        //   child: RaisedButton(
+        //     onPressed: () {
+        //       //Get the current location
+        //       getLocationData();
+        //     },
+        //     child: Text('Get Location'),
+        //   ),
+        // ),
+        );
   }
 }
