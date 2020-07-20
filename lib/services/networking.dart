@@ -6,7 +6,7 @@ class NetworkHelper {
 
   final String url;
 
-  Future<void> getData() async {
+  Future getData() async {
     http.Response res = await http.get(url);
     //print(res.statusCode);
     if (res.statusCode == 200) {
