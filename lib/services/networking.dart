@@ -13,7 +13,6 @@ class NetworkHelper {
       String data = res.body;
 
       return jsonDecode(data);
-      
     } else {
       print(res.statusCode);
     }
